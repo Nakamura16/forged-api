@@ -25,12 +25,12 @@ router.post('/create-pix', function(req, res, next) {
   const body= { 
     transaction_amount: req.body.transaction_amount,
     description: req.body.description,
-    payment_method_id: req.body.paymentMethodId,
+    payment_method_id: req.body.payment_method_id,
         payer: {
-        email: req.body.email,
+        email: req.body.payer.email,
         identification: {
-          type: req.body.identificationType,
-          number: req.body.number
+          type: req.body.payer.identification.type,
+          number: req.body.payer.identification.number
     }}}
 
   const requestOptions= { idempotencyKey: crypto.randomBytes(16).toString('hex') }
