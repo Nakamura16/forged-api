@@ -18,7 +18,7 @@ router.post('/create-pix', function(req, res, next) {
   console.log("Request")
   console.log(req.body)
 
-  if (!req.body.email || !req.body.number) {
+  if (!req.body.payer.email || !req.body.payer.identification.number) {
     return res.status(400).json({ error: 'Email e CPF são obrigatórios.' });
   }
 
