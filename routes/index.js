@@ -14,11 +14,6 @@ const payment = new Payment(client);
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Forged Api' });
-});
-
 router.post('/create-pix', function(req, res, next) {
   console.log("Request")
   console.log(req.body)
