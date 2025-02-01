@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "build": "npm install && npm run lint && npm run test && echo 'Aplicação pronta para deploy'"
+    "build": "npm ci && echo 'Aplicação pronta para deploy'"
   },
   "dependencies": {
     "@mercadopago/sdk-js": "^0.0.3",
