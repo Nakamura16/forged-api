@@ -1,6 +1,8 @@
+const nodemailer = require('nodemailer');
 const {MercadoPagoConfig, Payment} = require('mercadopago')
 const crypto = require('crypto');
 require('dotenv').config();
+
 
 const client = new MercadoPagoConfig({ 
   accessToken: process.env.ACCESS_TOKEN, 
@@ -45,6 +47,35 @@ router.post('/create-pix', function(req, res, next) {
     console.log("error")
     console.log(error)
     res.status(500).json({ error: 'Erro ao processar o pagamento.' });
+  });
+});
+
+const transport = nodemailer.createTransport({
+  host:'smtp.gmail.com',
+  port: '587',
+  secure: false,
+  auth:{
+    user: process.env.EMAILUSER,
+    pass: process.env.EMAILPASS
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
+
+router.post('/send-email', function(req, res, next) {
+  transport.sendMail({
+    from: 'Forged Performance <forgedperformancebot@gmail.com>',
+    to:'danilorodrigues@me.com',
+    subject: 'Nova Venda!',
+    html: `<h1>Nome: ${req.body.Name}</h1><br/><h1>Telefone: ${req.body.Number}</h1>`,
+    text: `Nome: ${req.body.Name} Telefone: ${req.body.Number}`,
+  })
+  .then((result) => res.send(result))
+  .catch((error) => {
+    console.log("error")
+    console.log(error)
+    res.status(500).json({ error: 'Erro ao processar o email.' });
   });
 });
 
