@@ -79,8 +79,7 @@ router.post('/send-email', function(req, res, next) {
 
   transport.sendMail({
     from: 'Forged Performance <forgedperformancebot@gmail.com>',
-    to:'andre.massao.nakamura@gmail.com',
-    // danilorodrigues@me.com, 
+    to:'danilorodrigues@me.com',
     subject: 'Nova Venda! 💸',
     html: emailContent,
     text: `Nome: ${req.body.Name} Telefone: ${req.body.Number}`,
@@ -100,17 +99,13 @@ router.post('/send-email', function(req, res, next) {
 const clientTemplatePath = path.join(__dirname, '../EmailTemplates/ClientEmailTemplate.html');
 const clientTemplate = fs.readFileSync(clientTemplatePath, 'utf-8');
 router.post('/send-client-email', function(req, res, next) {
-  const dynamicData = {
-    name: req.body.Name,
-    number: req.body.Number
-  };
   
   let emailContent = clientTemplate;
+  emailContent = emailContent.replace('{{name}}', req.body.name);
 
   transport.sendMail({
     from: 'Forged Performance <forgedperformancebot@gmail.com>',
-    to:'andre.massao.nakamura@gmail.com',
-    // danilorodrigues@me.com, 
+    to: req.body.email,
     subject: 'Seja Bem vindo a Forged Performance',
     html: emailContent,
     headers: {
