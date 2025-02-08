@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const {MercadoPagoConfig, Payment} = require('mercadopago')
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 
@@ -63,13 +65,29 @@ const transport = nodemailer.createTransport({
   },
 });
 
+const htmlTemplatePath = path.join(__dirname, '../EmailTemplates/InternalEmailTemplate.html');
+const htmlTemplate = fs.readFileSync(htmlTemplatePath, 'utf-8');
 router.post('/send-email', function(req, res, next) {
+  const dynamicData = {
+    name: req.body.Name,
+    number: req.body.Number
+  };
+  
+  let emailContent = htmlTemplate;
+  emailContent = emailContent.replace('{{name}}', dynamicData.name);
+  emailContent = emailContent.replace('{{phone}}', dynamicData.number);
+
   transport.sendMail({
     from: 'Forged Performance <forgedperformancebot@gmail.com>',
-    to:'danilorodrigues@me.com',
-    subject: 'Nova Venda!',
-    html: `<h1>Nome: ${req.body.Name}</h1><br/><h1>Telefone: ${req.body.Number}</h1>`,
+    to:'andre.massao.nakamura@gmail.com',
+    // danilorodrigues@me.com, 
+    subject: 'Nova Venda! 💸',
+    html: emailContent,
     text: `Nome: ${req.body.Name} Telefone: ${req.body.Number}`,
+    headers: {
+      'X-Priority': '1 (Highest)',
+      'X-MSMail-Priority': 'High'
+    }
   })
   .then((result) => res.send(result))
   .catch((error) => {
