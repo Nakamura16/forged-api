@@ -97,4 +97,33 @@ router.post('/send-email', function(req, res, next) {
   });
 });
 
+const clientTemplatePath = path.join(__dirname, '../EmailTemplates/ClientEmailTemplate.html');
+const clientTemplate = fs.readFileSync(clientTemplatePath, 'utf-8');
+router.post('/send-client-email', function(req, res, next) {
+  const dynamicData = {
+    name: req.body.Name,
+    number: req.body.Number
+  };
+  
+  let emailContent = clientTemplate;
+
+  transport.sendMail({
+    from: 'Forged Performance <forgedperformancebot@gmail.com>',
+    to:'andre.massao.nakamura@gmail.com',
+    // danilorodrigues@me.com, 
+    subject: 'Seja Bem vindo a Forged Performance',
+    html: emailContent,
+    headers: {
+      'X-Priority': '1 (Highest)',
+      'X-MSMail-Priority': 'High'
+    }
+  })
+  .then((result) => res.send(result))
+  .catch((error) => {
+    console.log("error")
+    console.log(error)
+    res.status(500).json({ error: 'Erro ao processar o email.' });
+  });
+});
+
 module.exports = router;
